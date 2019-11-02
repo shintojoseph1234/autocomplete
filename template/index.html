@@ -11,13 +11,14 @@
                         <div class="form-group">
                             <!-- label for the input field -->
                            <label for="input">Enter the input value</label>
-                           <input type="text" class="form-control"  name="number" >
-
+                           <!-- input text field -->
+                           <input list="browsers" class="form-control" name="input" id="input"/>
+                           <!-- display dropdown options -->
+                           <datalist id="browsers"></datalist>
                         </div>
                           <!-- submit button  -->
                         <!-- <button type="button" class="btn btn-success" onclick="submit_from()" id="button_id">Submit</button> -->
                      </form>
-
                   </div>
 
                   <div class="col-lg-4 col-md-8 mx-auto">
@@ -41,60 +42,49 @@
     <!-- javascript -->
     <script type="text/javascript">
 
-      // form submit function
-      function submit_from() {
-            // obtain the form data
-             var formData = new FormData($('#form_id')[0]);
-             // ajax start
-             $.ajax({
-                    // post url
-                     url: "{% url 'search' %}",
-                     // method: POST
-                     type: 'GET',
-                     // form data
-                     data: formData,
-                     async: true,
-                     cache: false,
-                     contentType: false,
-                     processData: false,
-                     // ajax success response
-                     success: function(response_data) {
-                       // if calculation success
-                       if(response_data[0].status=='success')
-                       {
-                        // diaplay the result
-                         document.getElementById("result").innerHTML = response_data[0].data.result;
-                         // display the message
-                         document.getElementById("data_message").innerHTML = "is the element in the sequence";
-                         // display the time taken
-                         document.getElementById("time").innerHTML = response_data[0].data.time;
-                         // display the time taken message
-                         document.getElementById("time_message").innerHTML = "is the time taken";
-                       }
-                       // if calculation is failed
-                       else if (response_data[0].status=='failed')
-                       {
-                         // display the failure message
-                         document.getElementById("result").innerHTML = response_data[0].data.message;
-                       }
-                     }
+      // get the input text field
+      var input = document.getElementById('input');
+      // on each value enter do the following inside the function
+      input.addEventListener('keyup',function(){
 
-             }); // end of $.ajax
-      }
+        // ajax start
+        $.ajax({
+               // post url
+                url:"api/search/" + input.value,
+                // method: GET
+                type: 'GET',
+                // form data
+                dataType: "json",
+                // ajax success response
+                success: function(response_data) {
+                  // if calculation success
+                  if(response_data[0].status=='success')
+                  {
 
-      // function which submits form data on enter button click
-      $(function() {
-        // if keypress
-      	$("form input").keypress(function(e) {
-          // check whether key is enter key
-      		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-            // click the button if enter key
-      			document.getElementById("button_id").click()
-      			return false;
-      		} else {
-      			return true;
-      		}
-      	});
+                    // for each in the respoonse data
+                    $.each(response_data[0].data.suggession_list, function (i, data) {
+                        // remove if exists in the option list
+                        $('#browsers option[value='+ data +']').remove();
+                        // create a option with the data
+                        var div_data = "<option value=" + data + ">" ;
+                        // append to options list
+                        $(div_data).appendTo('#browsers');
+                    });
+
+                    // display the time taken
+                   document.getElementById("time").innerHTML = response_data[0].data.time;
+                   // display the time taken message
+                   document.getElementById("time_message").innerHTML = "is the time taken";
+
+                  }
+                  // if calculation is failed
+                  else if (response_data[0].status=='failed')
+                  {
+                    // log the failure message
+                    console.log("response failed");
+                  }
+                }
+        }); // end of $.ajax
       });
 
     </script>
