@@ -1,1 +1,1 @@
-web: gunicorn autocomplete.wsgi --log-file -
+web: gunicorn autocomplete.wsgi
