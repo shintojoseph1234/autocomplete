@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block body %}
+      <main>
+         <section class="after-loop" style="padding-top: 10%;">
+            <div class="container">
+               <div class="row">
+                  <div class="col-lg-4 col-md-8 mb-5 mb-lg-0 mx-auto">
+                        <!-- form for posting the input data -->
+                       <form method="post" id="form_id">
+                         {% csrf_token %}
+                        <div class="form-group">
+                            <!-- label for the input field -->
+                           <label for="input">Enter the input value</label>
+                           <!-- input text field -->
+                           <input list="browsers" class="form-control" name="input" id="input"/>
+                           <!-- display dropdown options -->
+                           <datalist id="browsers"></datalist>
+                        </div>
+                          <!-- submit button  -->
+                        <!-- <button type="button" class="btn btn-success" onclick="submit_from()" id="button_id">Submit</button> -->
+                     </form>
+                  </div>
+
+                  <div class="col-lg-4 col-md-8 mx-auto">
+                     <a class="after-loop-item card border-0 card-guides shadow-lg">
+                        <div class="card-body d-flex align-items-end flex-column text-right">
+                           <h4>Time</h4>
+                            <!-- time after calculation -->
+                           <h4 id="time"></h4>
+                            <!-- time message after calculation -->
+                           <p class="w-75" id = "time_message"></p>
+                        </div>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </section>
+      </main>
+
+    <!-- jquery script url -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- javascript -->
+    <script type="text/javascript">
+
+      // get the input text field
+      var input = document.getElementById('input');
+      // on each value enter do the following inside the function
+      input.addEventListener('keyup',function(){
+
+        // ajax start
+        $.ajax({
+               // post url
+                url:"api/search/" + input.value,
+                // method: GET
+                type: 'GET',
+                // form data
+                dataType: "json",
+                // ajax success response
+                success: function(response_data) {
+                  // if calculation success
+                  if(response_data[0].status=='success')
+                  {
+
+                    // for each in the respoonse data
+                    $.each(response_data[0].data.suggession_list, function (i, data) {
+                        // remove if exists in the option list
+                        $('#browsers option[value='+ data +']').remove();
+                        // create a option with the data
+                        var div_data = "<option value=" + data + ">" ;
+                        // append to options list
+                        $(div_data).appendTo('#browsers');
+                    });
+
+                    // display the time taken
+                   document.getElementById("time").innerHTML = response_data[0].data.time;
+                   // display the time taken message
+                   document.getElementById("time_message").innerHTML = "is the time taken";
+
+                  }
+                  // if calculation is failed
+                  else if (response_data[0].status=='failed')
+                  {
+                    // log the failure message
+                    console.log("response failed");
+                  }
+                }
+        }); // end of $.ajax
+      });
+
+    </script>
+
+    {% endblock %}
