@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # custom apps
     'api',
     'rest_framework',
+    'rest_framework_swagger',
 ]
 
 
