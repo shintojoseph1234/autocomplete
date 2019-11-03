@@ -28,8 +28,7 @@ SECRET_KEY = '9-o=*t4hcfo)wzb@w!pod_gixvu3dkefb=#z3ozm&+(&kr(u5+'
 DEBUG = False
 
 # allowed hosts
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = [ "‘0.0.0.0", "localhost", "autocomplete1234.herokuapp.com"]
 
 ################################## Application definition
 INSTALLED_APPS = [
@@ -48,8 +47,8 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,25 +134,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
-STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
+PROJECT_ROOT   =   os.path.join(os.path.abspath(__file__))
+
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
-# STATIC_ROOT  = os.path.join(BASE_DIR, 'static')
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
-
-# Extra lookup directories for collectstatic to find static files
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
+STATIC_ROOT  = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 #  Add configuration for static files storage using whitenoise
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 import dj_database_url
