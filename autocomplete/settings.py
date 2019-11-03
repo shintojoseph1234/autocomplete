@@ -26,7 +26,7 @@ SECRET_KEY = '9-o=*t4hcfo)wzb@w!pod_gixvu3dkefb=#z3ozm&+(&kr(u5+'
 DEBUG = True
 
 # allowed hosts
-ALLOWED_HOSTS = ['herokudjangoapp.herokuapp.com']
+ALLOWED_HOSTS = ['autocomplete1234.herokuapp.com']
 
 
 ################################## Application definition
